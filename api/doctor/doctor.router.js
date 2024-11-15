@@ -1,4 +1,4 @@
-const { createUser, deleteUser, login,getUserByID,getUsers,updateUser } = require("./user.controller");
+const { createUser, deleteUser, login,getUserByID,getUsers,updateUser } = require("./doctor.controller");
 const express = require("express");
 const router = express.Router();
 const { verifyToken } = require("../../auth/token_validation"); 

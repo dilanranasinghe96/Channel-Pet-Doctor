@@ -5,8 +5,8 @@ getUserByID,
 deleteUser,
 getUsers,
 updateUser,
-getUserByNIC
-} = require("./user.service");
+getUserByEmail
+} = require("./medic.service");
 
 const {sign} = require("jsonwebtoken");
 
@@ -102,15 +102,14 @@ module.exports ={
     },
     login: (req, res)=>{
         const body = req.body;
-        getUserByNIC(body.NIC_no, (err, results) => {
-            console.log(body.NIC_no)
+        getUserByEmail(body.email, (err, results) => {
             if(err){
                 console.log(err);
             }
             if(!results){
                 return res.json({
                     success: 0,
-                    data: "Invalid NIC or Password"
+                    data: "Invalid Email or Password"
                 });
             }
             const result = compareSync(body.password, results.password);
@@ -127,7 +126,7 @@ module.exports ={
             }else{
                 return res.json({
                     success: 0,
-                    data: "Invalid NIC or Password"
+                    data: "Invalid Email or Password"
                 });
             }
         })

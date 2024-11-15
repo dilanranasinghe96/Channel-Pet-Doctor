@@ -3,31 +3,14 @@ const pool = require("../../config/db");
 module.exports = {
     create: (data, callBack) => {
         pool.query(
-            `INSERT INTO farmer (name, contact, location, mobile_no, NIC_no, password) VALUES (?, ?, ?, ?,?,?)`,
+            `INSERT INTO medicine_list (user_id,medicine_name, dosage, bill,mediafile) VALUES (?, ?, ?, ?, ?)`,
             [
                 data.name,
-                data.contact,
-                data.location,
-                data.mobile_no,
-                data.NIC_no,
-                data.password,
-            ],
-            (error, result, fields) => {
-                if (error) {
-                    return callBack(error);
-                }
-                return callBack(null, result);
-            }
-        );
-    },
-    updateUser: (data, callBack) => {
-        pool.query(
-            `UPDATE farmer SET name = ?, email = ?, password = ?, role = ? WHERE id = ?`, // Removed extra comma
-            [
-                data.name,
+                data.id_no,
+                data.area,
                 data.email,
+                data.mobile_no,
                 data.password,
-                data.role
             ],
             (error, result, fields) => {
                 if (error) {
@@ -40,7 +23,7 @@ module.exports = {
 
     getUsers: (callBack) => {
         pool.query(
-            `SELECT name, contact, location, mobile_no, NIC_no FROM farmer`,
+            `SELECT * FROM medicine_list`,
             [],
             (error, result, fields) => {
                 if (error) {
@@ -52,7 +35,7 @@ module.exports = {
     },
     getUserByID: (id, callBack) => {
         pool.query(
-            `SELECT name, contact, location, mobile_no, NIC_no FROM farmer WHERE id = ?`,
+            `SELECT * FROM medicine_list WHERE id = ?`,
             [id],
             (error, result, fields) => {
                 if (error) {
@@ -63,10 +46,10 @@ module.exports = {
         );
     },
 
-    getUserByNIC: (NIC_no, callBack) => {
+    getUserByEmail: (email, callBack) => {
         pool.query(
-            `SELECT * FROM farmer WHERE NIC_no = ?`,
-            [NIC_no],
+            `SELECT * FROM medicine_list WHERE email = ?`,
+            [email],
             (error, result, fields) => {
                 if (error) {
                     return callBack(error);
@@ -78,7 +61,7 @@ module.exports = {
 
     updateUser: (data, callBack) => {
         pool.query(
-            `UPDATE farmer SET name = ?, email = ?, password = ? WHERE id = ?`, // Removed extra comma
+            `UPDATE medicine_list SET name = ?, email = ?, password = ? WHERE id = ?`, // Removed extra comma
             [
                 data.name,
                 data.email,
@@ -96,7 +79,7 @@ module.exports = {
 
     deleteUser: (data, callBack) => {
         pool.query(
-            `DELETE FROM farmer WHERE id = ?`,
+            `DELETE FROM medicine_list WHERE id = ?`,
             [data.id],
             (error, result, fields) => {
                 if (error) {

@@ -15,10 +15,11 @@ USE channel_pet;
 
 -- Step 2.1: Create the doctor table
 CREATE TABLE doctor (
+    id INT AUTO_INCREMENT PRIMARY KEY,  
     name VARCHAR(255) NOT NULL,
-    id_no INT PRIMARY KEY,
+    id_no INT UNIQUE,  
     area VARCHAR(100),
-    email VARCHAR(255) UNIQUE,
+    email VARCHAR(191) UNIQUE,
     mobile_no VARCHAR(15),
     password VARCHAR(255) NOT NULL
 );
@@ -26,6 +27,7 @@ CREATE TABLE doctor (
 
 -- Step 2.2: Create the appointment table
 CREATE TABLE appointment (
+    id INT AUTO_INCREMENT PRIMARY KEY,  
     name VARCHAR(255) NOT NULL,
     contact VARCHAR(15),
     location VARCHAR(100),
@@ -36,20 +38,25 @@ CREATE TABLE appointment (
 
 -- Step 2.3: Create the medicine_list table
 CREATE TABLE medicine_list (
-    user_id INT,
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- Auto-incrementing unique ID
+    user_id INT,  -- Foreign key to doctor table
     medicine_name VARCHAR(255) NOT NULL,
     dosage VARCHAR(50),
     bill BLOB,
     mediafile BLOB,
-    FOREIGN KEY (user_id) REFERENCES doctor(id_no) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES doctor(id) ON DELETE CASCADE
 );
+
 
 
 -- Step 2.4: Create the farmer table
 CREATE TABLE farmer (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- Auto-incrementing unique ID
     name VARCHAR(255) NOT NULL,
     contact VARCHAR(15),
     location VARCHAR(100),
     mobile_no VARCHAR(15),
-    NIC_no VARCHAR(12) UNIQUE
+    NIC_no VARCHAR(12) UNIQUE,
+    password VARCHAR(255) NOT NULL
 );
+

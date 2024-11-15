@@ -1,16 +1,20 @@
 const pool = require("../../config/db");
 
 module.exports = {
-    create: (data, callBack) => {
+     create : (data, callBack) => {
+        console.log('Data being inserted:', data);
+        if (!data.name || !data.contact || !data.location || !data.message) {
+            return callBack(new Error('Missing required fields'));
+        }
+    
         pool.query(
-            `INSERT INTO farmer (name, contact, location, mobile_no, NIC_no, password) VALUES (?, ?, ?, ?,?,?)`,
+            `INSERT INTO appointment (name, contact, location, message, mediafile) VALUES (?, ?, ?, ?, ?)`,
             [
                 data.name,
                 data.contact,
                 data.location,
-                data.mobile_no,
-                data.NIC_no,
-                data.password,
+                data.message,
+                data.mediafile,
             ],
             (error, result, fields) => {
                 if (error) {
@@ -20,27 +24,11 @@ module.exports = {
             }
         );
     },
-    updateUser: (data, callBack) => {
-        pool.query(
-            `UPDATE farmer SET name = ?, email = ?, password = ?, role = ? WHERE id = ?`, // Removed extra comma
-            [
-                data.name,
-                data.email,
-                data.password,
-                data.role
-            ],
-            (error, result, fields) => {
-                if (error) {
-                    return callBack(error);
-                }
-                return callBack(null, result);
-            }
-        );
-    },
+    
 
     getUsers: (callBack) => {
         pool.query(
-            `SELECT name, contact, location, mobile_no, NIC_no FROM farmer`,
+            `SELECT * FROM appointment`,
             [],
             (error, result, fields) => {
                 if (error) {
@@ -52,7 +40,7 @@ module.exports = {
     },
     getUserByID: (id, callBack) => {
         pool.query(
-            `SELECT name, contact, location, mobile_no, NIC_no FROM farmer WHERE id = ?`,
+            `SELECT * FROM appointment WHERE id = ?`,
             [id],
             (error, result, fields) => {
                 if (error) {
@@ -63,10 +51,10 @@ module.exports = {
         );
     },
 
-    getUserByNIC: (NIC_no, callBack) => {
+    getUserByLocation: (email, callBack) => {
         pool.query(
-            `SELECT * FROM farmer WHERE NIC_no = ?`,
-            [NIC_no],
+            `SELECT * FROM appointment WHERE location = ?`,
+            [email],
             (error, result, fields) => {
                 if (error) {
                     return callBack(error);
@@ -78,7 +66,7 @@ module.exports = {
 
     updateUser: (data, callBack) => {
         pool.query(
-            `UPDATE farmer SET name = ?, email = ?, password = ? WHERE id = ?`, // Removed extra comma
+            `UPDATE appointment SET name = ?, email = ?, password = ? WHERE id = ?`, // Removed extra comma
             [
                 data.name,
                 data.email,
@@ -96,7 +84,7 @@ module.exports = {
 
     deleteUser: (data, callBack) => {
         pool.query(
-            `DELETE FROM farmer WHERE id = ?`,
+            `DELETE FROM appointment WHERE id = ?`,
             [data.id],
             (error, result, fields) => {
                 if (error) {

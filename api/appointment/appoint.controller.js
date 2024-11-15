@@ -5,29 +5,44 @@ getUserByID,
 deleteUser,
 getUsers,
 updateUser,
-getUserByNIC
-} = require("./user.service");
+getUserByLocation
+} = require("./appoint.service");
 
 const {sign} = require("jsonwebtoken");
 
 module.exports ={
-    createUser: (req, res) =>{
-        const body = req.body;
-        const salt = genSaltSync(10);
-        body.password = hashSync(body.password, salt);
-        create(body,(err, results)=> {
-            if(err){
-                console.log(err);
-                return res.status(500).json({
-                    success: 0,
-                    message: "Database Connection Error"
+    createUser : (req, res) => {
+        try {
+            const data = {
+                name: req.body.name,
+                contact: req.body.contact,
+                location: req.body.location,
+                message: req.body.message,
+                mediafile: req.file ? req.file.filename : null, // Save uploaded file name
+            };
+    
+            console.log("Data being inserted:", data);
+    
+            create(data, (err, results) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({
+                        success: 0,
+                        message: "Database Connection Error",
+                    });
+                }
+    
+                return res.status(200).json({
+                    success: 1,
+                    data: results,
                 });
-            }
-            return res.status(200).json({
-                success: 1,
-                data: results
-            })
-        })
+            });
+        } catch (err) {
+            return res.status(400).json({
+                success: 0,
+                message: err.message,
+            });
+        }
     },
     getUserByID: (req, res) => {
         getUserByID(req.params.id, (err, results) => {
@@ -100,17 +115,16 @@ module.exports ={
             })
         });
     },
-    login: (req, res)=>{
+    locationFilter: (req, res)=>{
         const body = req.body;
-        getUserByNIC(body.NIC_no, (err, results) => {
-            console.log(body.NIC_no)
+        getUserByLocation(body.email, (err, results) => {
             if(err){
                 console.log(err);
             }
             if(!results){
                 return res.json({
                     success: 0,
-                    data: "Invalid NIC or Password"
+                    data: "Invalid Email or Password"
                 });
             }
             const result = compareSync(body.password, results.password);
@@ -127,7 +141,7 @@ module.exports ={
             }else{
                 return res.json({
                     success: 0,
-                    data: "Invalid NIC or Password"
+                    data: "Invalid Email or Password"
                 });
             }
         })

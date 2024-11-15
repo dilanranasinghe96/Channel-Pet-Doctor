@@ -1,10 +1,9 @@
 const pool = require("../../config/db");
-const { getUserByEmail } = require("./doctor.controller");
 
 module.exports = {
     create: (data, callBack) => {
         pool.query(
-            `INSERT INTO doctor (name, id_no, area, email, mobile_no, password) VALUES (?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO doctor (name,id_no, area, email,mobile_no, password) VALUES (?, ?, ?, ?, ?, ?)`,
             [
                 data.name,
                 data.id_no,
@@ -24,7 +23,7 @@ module.exports = {
 
     getUsers: (callBack) => {
         pool.query(
-            `SELECT * FROM doctor`,
+            `SELECT name,id_no, area, email,mobile_no FROM doctor`,
             [],
             (error, result, fields) => {
                 if (error) {
@@ -36,7 +35,7 @@ module.exports = {
     },
     getUserByID: (id, callBack) => {
         pool.query(
-            `SELECT * FROM doctor WHERE id = ?`,
+            `SELECT name,id_no, area, email,mobile_no FROM doctor WHERE id = ?`,
             [id],
             (error, result, fields) => {
                 if (error) {
@@ -62,12 +61,11 @@ module.exports = {
 
     updateUser: (data, callBack) => {
         pool.query(
-            `UPDATE doctor SET name = ?, email = ?,mobile_no = ?, password = ? WHERE id = ?`, 
+            `UPDATE doctor SET name = ?, email = ?, password = ? WHERE id = ?`, // Removed extra comma
             [
                 data.name,
                 data.email,
                 data.password,
-                data.mobile_no,
                 data.id
             ],
             (error, result, fields) => {
@@ -91,4 +89,5 @@ module.exports = {
             }
         );
     }
+    
 };

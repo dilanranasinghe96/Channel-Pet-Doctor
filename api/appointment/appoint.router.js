@@ -1,13 +1,14 @@
-const { createUser, deleteUser, login, getUserByID, getUsers, updateUser } = require("./doctor.controller");
+const { createUser, deleteUser, locationFilter, getUserByID, getUsers, updateUser } = require("./appoint.controller");
 const express = require("express");
 const router = express.Router();
 const { checkToken } = require("../../auth/token_validation");
+const upload = require("../../config/multer"); 
 
-router.post("/", createUser);
+router.post("/", checkToken, upload.single("mediafile"), createUser);
 router.delete("/", checkToken, deleteUser);
 router.get("/:id",checkToken,  getUserByID);
 router.get("/", checkToken, getUsers);
 router.patch("/",checkToken, updateUser);
-router.post("/login", login);
+router.post("/filter", checkToken, locationFilter);
 
 module.exports = router;

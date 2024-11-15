@@ -56,16 +56,17 @@ module.exports ={
             }
             if(!results){
                 return res.json({
-                    success:0,
+                    success: 0,
                     message: "Record Not Found"
-                })
+                });
             }
             return res.status(200).json({
                 success: 1,
                 data: "User Deleted Successfully"
-            })
-        })
+            });
+        });
     },
+    
     updateUser: (req, res) => { 
         const body = req.body;
         const salt = genSaltSync(10);

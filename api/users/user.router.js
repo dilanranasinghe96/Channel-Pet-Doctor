@@ -1,13 +1,13 @@
-const { createUser, deleteUser, login,getUserByID,getUsers,updateUser } = require("./user.controller");
+const { createUser, deleteUser, login, getUserByID, getUsers, updateUser } = require("./user.controller");
 const express = require("express");
 const router = express.Router();
-const { verifyToken } = require("../../auth/token_validation"); 
+const { checkToken } = require("../../auth/token_validation");
 
-router.post("/", createUser);
-router.delete("/",verifyToken, deleteUser);
-router.get("/:id",verifyToken, getUserByID);
-router.get("/", verifyToken,getUsers);
-router.patch("/",verifyToken, updateUser);
-router.post("/login",login)
+router.post("/",  createUser);
+router.delete("/", checkToken, deleteUser);
+router.get("/:id",checkToken,  getUserByID);
+router.get("/", checkToken, getUsers);
+router.patch("/",checkToken, updateUser);
+router.post("/login", login);
 
-module.exports = router
+module.exports = router;

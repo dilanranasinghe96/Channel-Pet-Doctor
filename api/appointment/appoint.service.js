@@ -8,13 +8,14 @@ module.exports = {
         }
     
         pool.query(
-            `INSERT INTO appointment (name, contact, location, message, mediafile) VALUES (?, ?, ?, ?, ?)`,
+            `INSERT INTO appointment (name, contact, message, animal_image, appointment_datetime, location) VALUES (?, ?, ?, ?, ?,?)`,
             [
                 data.name,
                 data.contact,
-                data.location,
                 data.message,
-                data.mediafile,
+                data.animal_image,
+                data.appointment_datetime,
+                data.location,
             ],
             (error, result, fields) => {
                 if (error) {
@@ -64,23 +65,24 @@ module.exports = {
         );
     },
 
+// Update service function
     updateUser: (data, callBack) => {
         pool.query(
-            `UPDATE appointment SET name = ?, email = ?, password = ? WHERE id = ?`, // Removed extra comma
+            `UPDATE appointment SET status = ?, updated_by = ? WHERE id = ?`,
             [
-                data.name,
-                data.email,
-                data.password,
-                data.id
+                data.status,         // New status value
+                data.updated_by,     // Doctor's name or ID
+                data.id              // Appointment ID
             ],
             (error, result, fields) => {
                 if (error) {
-                    return callBack(error);
+                    return callBack(error); // Handle query errors
                 }
-                return callBack(null, result);
+                return callBack(null, result); // Successful update
             }
         );
     },
+
 
     deleteUser: (data, callBack) => {
         pool.query(

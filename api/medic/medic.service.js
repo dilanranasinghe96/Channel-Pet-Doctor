@@ -3,16 +3,15 @@ const pool = require("../../config/db");
 module.exports = {
     create: (data, callBack) => {
         pool.query(
-            `INSERT INTO medicine_list (user_id,medicine_name, dosage, bill,mediafile) VALUES (?, ?, ?, ?, ?)`,
+            `INSERT INTO medicine_list (user_id, medicine_name, dosage, bill, mediafile) VALUES (?, ?, ?, ?, ?)`,
             [
-                data.name,
-                data.id_no,
-                data.area,
-                data.email,
-                data.mobile_no,
-                data.password,
+                data.user_id,             // Should be the doctor's ID (foreign key)
+                data.medicine_name,       // Medicine name
+                data.dosage,              // Dosage
+                data.bill,                // Bill (BLOB or NULL)
+                data.mediafile            // Media file (BLOB or NULL)
             ],
-            (error, result, fields) => {
+            (error, result) => {
                 if (error) {
                     return callBack(error);
                 }

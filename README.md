@@ -27,25 +27,39 @@ CREATE TABLE doctor (
 
 -- Step 2.2: Create the appointment table
 CREATE TABLE appointment (
-    id INT AUTO_INCREMENT PRIMARY KEY,  
+    id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    contact VARCHAR(15),
-    location VARCHAR(100),
+    contact VARCHAR(20) NOT NULL,
     message TEXT,
-    mediafile BLOB
+    animal_image BLOB,
+    appointment_datetime DATETIME NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('pending', 'confirmed', 'canceled') DEFAULT 'pending',
+    updated_by INT,  -- Foreign key referencing the doctor who updated the status
+    updated_at TIMESTAMP DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (updated_by) REFERENCES doctor(id)  -- Foreign key constraint
 );
+
 
 
 -- Step 2.3: Create the medicine_list table
 CREATE TABLE medicine_list (
-    id INT AUTO_INCREMENT PRIMARY KEY,  -- Auto-incrementing unique ID
-    user_id INT,  -- Foreign key to doctor table
-    medicine_name VARCHAR(255) NOT NULL,
-    dosage VARCHAR(50),
-    bill BLOB,
-    mediafile BLOB,
-    FOREIGN KEY (user_id) REFERENCES doctor(id) ON DELETE CASCADE
+    id INT AUTO_INCREMENT PRIMARY KEY,         -- Unique identifier for each medicine entry
+    user_id INT NOT NULL,                      -- Foreign key referencing the doctor prescribing the medicine
+    appointment_id INT NOT NULL,               -- Foreign key linking this medicine to a specific appointment
+    medicine_name VARCHAR(255) NOT NULL,       -- Name of the prescribed medicine
+    dosage VARCHAR(50),                        -- Dosage information (e.g., "500 mg", "Twice daily")
+    quantity INT NOT NULL,                     -- Quantity prescribed
+    bill_amount DECIMAL(10, 2) NOT NULL,       -- Total bill amount (currency format)
+    bill BLOB,                                 -- Binary data for bill image or PDF
+    mediafile BLOB,                            -- Any additional media related to the prescription (optional)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Automatically set timestamp when record is created
+    updated_at TIMESTAMP DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP, -- Updated when record changes
+    FOREIGN KEY (user_id) REFERENCES doctor(id) ON DELETE CASCADE, -- Maintains referential integrity
+    FOREIGN KEY (appointment_id) REFERENCES appointment(id) ON DELETE CASCADE -- Links to appointment
 );
+
 
 
 

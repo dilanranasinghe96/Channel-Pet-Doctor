@@ -11,23 +11,44 @@ getUserByEmail
 const {sign} = require("jsonwebtoken");
 
 module.exports ={
-    createUser: (req, res) =>{
+    createMedicine: (req, res) =>{
         const body = req.body;
-        const salt = genSaltSync(10);
-        body.password = hashSync(body.password, salt);
-        create(body,(err, results)=> {
-            if(err){
-                console.log(err);
+        console.log(req.body)
+
+        // Validate required fields
+        if (!body.user_id || !body.medicine_name || !body.dosage) {
+            return res.status(400).json({
+                success: 0,
+                message: "Missing required fields (user_id, medicine_name, dosage).",
+            });
+        }
+    
+        // Handle optional file uploads (bill and mediafile)
+        const bill = req.files && req.files.bill ? req.files.bill.buffer : null;
+        const mediafile = req.files && req.files.mediafile ? req.files.mediafile.buffer : null;
+    
+        const data = {
+            user_id: body.user_id,
+            medicine_name: body.medicine_name,
+            dosage: body.dosage,
+            bill: bill,
+            mediafile: mediafile,
+        };
+    
+        create(data, (err, results) => {
+            if (err) {
+                console.error("Error inserting medicine:", err);
                 return res.status(500).json({
                     success: 0,
-                    message: "Database Connection Error"
+                    message: "Database Connection Error",
                 });
             }
             return res.status(200).json({
                 success: 1,
-                data: results
-            })
-        })
+                data: results,
+                message: "Medicine record created successfully.",
+            });
+        });
     },
     getUserByID: (req, res) => {
         getUserByID(req.params.id, (err, results) => {

@@ -1,12 +1,12 @@
-const {createPool} = require('mysql');
+const mysql = require('mysql2'); // Use mysql2 instead of mysql
 
-const pool=createPool({
-    port:process.env.DB_PORT,
-    host:process.env.DB_HOST,
-    user:process.env.DB_USER,
-    password:process.env.DB_PWD,
-    database:process.env.DB_NAME,
-    connectionLimit:process.env.DN_CONN_LIMIT
+// Create a connection pool
+const pool = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PWD,
+    database: process.env.DB_NAME
 });
 
-module.exports=pool;
+// Export the pool for use in other parts of the application
+module.exports = pool;
